@@ -8,37 +8,37 @@
       <Label layoutX="40.0" layoutY="14.0" prefHeight="17.0" prefWidth="211.0" text="Inventory Management System" />
       <AnchorPane layoutX="30.0" layoutY="51.0" prefHeight="298.0" prefWidth="438.0">
          <children>
-            <TableView layoutX="19.0" layoutY="45.0" prefHeight="200.0" prefWidth="394.0">
+            <TableView layoutX="19.0" layoutY="45.0" prefHeight="200.0" prefWidth="394.0" fx:id="partTableView">
               <columns>
-                <TableColumn prefWidth="75.0" text="Part ID" />
-                <TableColumn prefWidth="93.0" text="Part Name" />
-                  <TableColumn prefWidth="128.0" text="Inventory Level" />
-                  <TableColumn prefWidth="97.0" text="Price/Unit" />
+                 <TableColumn prefWidth="75.0" text="Part ID" fx:id="partIdColumn" />
+                 <TableColumn prefWidth="93.0" text="Part Name" fx:id="partNameColumn" />
+                 <TableColumn prefWidth="128.0" text="Inventory Level" fx:id="partInventoryLevelColumn" />
+                 <TableColumn prefWidth="97.0" text="Price/Unit" fx:id="partPriceColumn" />
               </columns>
             </TableView>
             <Label layoutX="19.0" layoutY="14.0" text="Parts" />
-            <Button layoutX="189.0" layoutY="259.0" mnemonicParsing="false" onAction="#handleAddPart" text="Add" />
-            <Button layoutX="252.0" layoutY="259.0" mnemonicParsing="false" onAction="#handleModifyPart" text="Modify" />
-            <Button fx:id="partDeleteButton" layoutX="317.0" layoutY="259.0" mnemonicParsing="false" onAction="#handleDeletePart" text="Delete" />
-            <TextField fx:id="partSearchTextField" layoutX="216.0" layoutY="10.0" prefHeight="26.0" prefWidth="183.0" promptText="Search by Part ID or Name" />
+            <Button layoutX="189.0" layoutY="259.0" mnemonicParsing="false" onAction="#handleAddPart" text="Add" fx:id="partAddButton" />
+            <Button layoutX="252.0" layoutY="259.0" mnemonicParsing="false" onAction="#handleModifyPart" text="Modify" fx:id="partModifyButton" />
+            <Button layoutX="317.0" layoutY="259.0" mnemonicParsing="false" onAction="#handleDeletePart" text="Delete" fx:id="partDeleteButton" />
+            <TextField layoutX="216.0" layoutY="10.0" prefHeight="26.0" prefWidth="183.0" onAction="#searchPart" promptText="Search by Part ID or Name" fx:id="partSearchTextField" />
          </children>
       </AnchorPane>
       <Button fx:id="exitButton" layoutX="897.0" layoutY="360.0" mnemonicParsing="false" onAction="#handleExit" text="Exit" />
       <AnchorPane layoutX="496.0" layoutY="51.0" prefHeight="298.0" prefWidth="438.0">
          <children>
-            <TableView layoutX="19.0" layoutY="45.0" prefHeight="200.0" prefWidth="401.0">
+            <TableView layoutX="19.0" layoutY="45.0" prefHeight="200.0" prefWidth="401.0" fx:id="productTableView">
                <columns>
-                  <TableColumn prefWidth="75.0" text="Product ID" />
-                  <TableColumn prefWidth="113.0" text="Product Name" />
-                  <TableColumn prefWidth="98.0" text="Inventory Level" />
-                  <TableColumn prefWidth="114.0" text="Price/Unit" />
+                  <TableColumn prefWidth="75.0" text="Product ID" fx:id="productIdColumn"/>
+                  <TableColumn prefWidth="113.0" text="Product Name" fx:id="productNameColumn"/>
+                  <TableColumn prefWidth="98.0" text="Inventory Level" fx:id="productInventoryLevelColumn"/>
+                  <TableColumn prefWidth="114.0" text="Price/Unit" fx:id="productPriceColumn"/>
                </columns>
             </TableView>
             <Label layoutX="19.0" layoutY="14.0" text="Products" />
-            <Button layoutX="189.0" layoutY="259.0" mnemonicParsing="false" onAction="#handleAddProduct" text="Add" />
-            <Button layoutX="250.0" layoutY="259.0" mnemonicParsing="false" onAction="#handleModifyProduct" text="Modify" />
-            <Button fx:id="productDeleteButton" layoutX="322.0" layoutY="259.0" mnemonicParsing="false" onAction="#handleDeleteProduct" text="Delete" />
-            <TextField fx:id="productSearchTextField" layoutX="216.0" layoutY="10.0" prefHeight="26.0" prefWidth="193.0" promptText="Search by Product ID or Name" />
+            <Button layoutX="189.0" layoutY="259.0" mnemonicParsing="false" onAction="#handleAddProduct" text="Add" fx:id="productAddButton"/>
+            <Button layoutX="250.0" layoutY="259.0" mnemonicParsing="false" onAction="#handleModifyProduct" text="Modify" fx:id="productModifyButton"/>
+            <Button layoutX="322.0" layoutY="259.0" mnemonicParsing="false" onAction="#handleDeleteProduct" text="Delete" fx:id="productDeleteButton" />
+            <TextField layoutX="216.0" layoutY="10.0" prefHeight="26.0" prefWidth="193.0" onAction="#searchProduct" promptText="Search by Product ID or Name" fx:id="productSearchTextField" />
          </children>
       </AnchorPane>
    </children>
