@@ -8,6 +8,9 @@ import model.Inventory;
 import model.Outsourced;
 import model.Part;
 
+/**
+ * The controller class for modifying parts.
+ */
 public class ModifyPartController {
 
     @FXML
@@ -73,6 +76,11 @@ public class ModifyPartController {
     @FXML
     private Part currentPart;
 
+    /**
+     * Initializes the part modification screen with the current part data.
+     *
+     * @param part The part to be modified.
+     */
     @FXML
     public void initializePart(Part part) {
         // Set current part
@@ -114,6 +122,9 @@ public class ModifyPartController {
 
     }
 
+    /**
+     * Changes the label and prompt text for the machine ID/company name text field depending on the part source.
+     */
     @FXML
     private void handlePartSourceToggle() {
         // Change the prompt text based on the selected radio button
@@ -121,14 +132,18 @@ public class ModifyPartController {
             machineIdOrCompanyNameTextField.setPromptText("Machine ID");
             machineIdOrCompanyNameLabel.setText("Machine ID");
         } else {
-            machineIdOrCompanyNameTextField.setPromptText("Company Name");
-            machineIdOrCompanyNameLabel.setText("Company Name");
+            machineIdOrCompanyNameTextField.setPromptText("Company");
+            machineIdOrCompanyNameLabel.setText("Company");
         }
     }
 
+    /**
+     * Validates input fields, creates a new part (either InHouse or Outsourced depending on selection),
+     * updates it in the inventory, and closes the screen.
+     */
     @FXML
     public void handleSaveButtonAction() {
-        if (validateInventory()) {
+        if (validateFields() && validateInventory()) {
             int id = Integer.parseInt(idTextField.getText());
             String name = nameTextField.getText();
             double price = Double.parseDouble(priceCostTextField.getText());
@@ -152,13 +167,20 @@ public class ModifyPartController {
         }
     }
 
-
+    /**
+     * Closes the part modification screen.
+     */
     @FXML
     public void handleCancelButtonAction() {
         Stage stage = (Stage) cancelButton.getScene().getWindow();
         stage.close();
     }
 
+    /**
+     * Validates that the inventory level is within the allowed min/max range.
+     *
+     * @return true if the inventory level is valid, false otherwise.
+     */
     @FXML
     private boolean validateInventory() {
         int min = Integer.parseInt(minTextField.getText());
@@ -171,6 +193,75 @@ public class ModifyPartController {
         return true;
     }
 
+    /**
+     * Validates the user input in all text fields.
+     *
+     * @return true if all fields are valid, false otherwise.
+     */
+    @FXML
+    private boolean validateFields() {
+        String name = nameTextField.getText();
+        String price = priceCostTextField.getText();
+        String inv = invTextField.getText();
+        String max = maxTextField.getText();
+        String min = minTextField.getText();
+        String machineIdOrCompanyName = machineIdOrCompanyNameTextField.getText();
+
+        if (name == null || name.isBlank()) {
+            displayErrorMessage("Name field must not be empty.");
+            return false;
+        }
+
+        try {
+            double priceValue = Double.parseDouble(price);
+        } catch (NumberFormatException | NullPointerException e) {
+            displayErrorMessage("Price must be a numeric value.");
+            return false;
+        }
+
+        try {
+            int invValue = Integer.parseInt(inv);
+        } catch (NumberFormatException | NullPointerException e) {
+            displayErrorMessage("Inventory must be an integer value.");
+            return false;
+        }
+
+        try {
+            int maxValue = Integer.parseInt(max);
+        } catch (NumberFormatException | NullPointerException e) {
+            displayErrorMessage("Max must be an integer value.");
+            return false;
+        }
+
+        try {
+            int minValue = Integer.parseInt(min);
+        } catch (NumberFormatException | NullPointerException e) {
+            displayErrorMessage("Min must be an integer value.");
+            return false;
+        }
+
+        if(inHouseRadioButton.isSelected()){
+            try {
+                int machineId = Integer.parseInt(machineIdOrCompanyName);
+            } catch (NumberFormatException | NullPointerException e) {
+                displayErrorMessage("Machine ID must be an integer value.");
+                return false;
+            }
+        } else {
+            if(machineIdOrCompanyName == null || machineIdOrCompanyName.isBlank()){
+                displayErrorMessage("Company Name must not be empty.");
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Displays an error dialog with the given message.
+     *
+     * @param message The message to display in the dialog.
+     */
     @FXML
     private void displayErrorMessage(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);

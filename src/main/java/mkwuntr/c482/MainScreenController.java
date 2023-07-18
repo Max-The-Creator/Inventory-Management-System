@@ -14,11 +14,14 @@ import model.Part;
 import model.Product;
 import model.Inventory;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 
 import java.io.IOException;
 import java.util.Optional;
 
+/**
+ * This is the main screen controller for the Inventory Management System.
+ * It handles all the actions that can be performed on the main screen.
+ */
 public class MainScreenController {
 
     @FXML
@@ -66,7 +69,10 @@ public class MainScreenController {
     @FXML
     private Button productAddButton, productModifyButton, productDeleteButton;
 
-    // Initialize method to populate table views
+    /**
+     * This initialize method populates the TableView for both Parts and Products.
+     * It also adds listeners to the search text fields for both Parts and Products.
+     */
     @FXML
     private void initialize() {
         // Define how to populate cells in part table
@@ -78,7 +84,7 @@ public class MainScreenController {
         // Populate the part table
         partTableView.setItems(Inventory.getAllParts());
 
-        // Similar code for the product table...
+        // Define how to populate cells in product table
         productIdColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getId()).asObject());
         productNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
         productInventoryLevelColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getStock()).asObject());
@@ -101,15 +107,20 @@ public class MainScreenController {
         });
     }
 
-
-    // Exits the program
+    /**
+     * This method handles the action of the Exit button.
+     * When clicked, it closes the application.
+     */
     @FXML
     private void handleExit() {
         Stage stage = (Stage) exitButton.getScene().getWindow();
         stage.close();
     }
 
-    //Opens Add Part Form
+    /**
+     * This method handles the action of the Add Part button.
+     * When clicked, it opens the Add Part form.
+     */
     @FXML
     private void handleAddPart() throws IOException {
         Stage stage = new Stage();
@@ -120,7 +131,10 @@ public class MainScreenController {
         stage.show();
     }
 
-    //Opens Modify Part Form if there is a part selected
+    /**
+     * This method handles the action of the Modify Part button.
+     * If a part is selected in the TableView, it opens the Modify Part form for that part.
+     */
     @FXML
     private void handleModifyPart() throws IOException {
         Part selectedPart = partTableView.getSelectionModel().getSelectedItem();
@@ -136,7 +150,10 @@ public class MainScreenController {
         }
     }
 
-    //Deletes selected part
+    /**
+     * This method handles the action of the Delete Part button.
+     * If a part is selected in the TableView, it shows a confirmation dialog and deletes the part if confirmed.
+     */
     @FXML
     private void handleDeletePart() {
         // Get the selected part from the TableView
@@ -167,7 +184,12 @@ public class MainScreenController {
         }
     }
 
-    //Searches for part based on either ID or Name
+    /**
+     * This method handles the search functionality for Parts.
+     * It searches for parts based on the text entered in the Part Search TextField.
+     * If the search text is a number, it treats it as a Part ID.
+     * If it is not a number, it treats it as a Part Name.
+     */
     @FXML
     private void searchPart() {
         String searchString = partSearchTextField.getText();
@@ -196,6 +218,10 @@ public class MainScreenController {
         }
     }
 
+    /**
+     * This method handles the action of the Add Product button.
+     * When clicked, it opens the Add Product form.
+     */
     @FXML
     private void handleAddProduct() throws IOException {
         Stage stage = new Stage();
@@ -206,6 +232,10 @@ public class MainScreenController {
         stage.show();
     }
 
+    /**
+     * This method handles the action of the Modify Product button.
+     * If a product is selected in the TableView, it opens the Modify Product form for that product.
+     */
     @FXML
     private void handleModifyProduct() throws IOException {
         Product selectedProduct = productTableView.getSelectionModel().getSelectedItem();
@@ -215,12 +245,18 @@ public class MainScreenController {
             loader.setLocation(getClass().getResource("modifyProduct.fxml"));
             Scene scene = new Scene(loader.load());
             ModifyProductController controller = loader.getController();
-            //controller.setProduct(selectedProduct);
+            controller.initializeProduct(selectedProduct);
             stage.setScene(scene);
             stage.show();
         }
     }
 
+    /**
+     * This method handles the search functionality for Products.
+     * It searches for products based on the text entered in the Product Search TextField.
+     * If the search text is a number, it treats it as a Product ID.
+     * If it is not a number, it treats it as a Product Name.
+     */
     @FXML
     private void searchProduct() {
         String searchString = productSearchTextField.getText();
@@ -249,36 +285,50 @@ public class MainScreenController {
         }
     }
 
+    /**
+     * This method handles the action of the Delete Product button.
+     * If a product is selected in the TableView, it shows a confirmation dialog and deletes the product if confirmed.
+     * If the selected product has associated parts, it shows an error message instead.
+     */
     @FXML
     private void handleDeleteProduct() {
-        // Get the selected product from the TableView
+        // Get the selected product
         Product selectedProduct = productTableView.getSelectionModel().getSelectedItem();
 
-        // If a product is selected
+        // Check if a product is selected
         if (selectedProduct != null) {
-            // Show a confirmation dialog
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Delete Product");
-            alert.setHeaderText("Are you sure you want to delete this product?");
-            alert.setContentText("Click OK to confirm");
+            // Check if the selected product has associated parts
+            if (selectedProduct.getAssociatedParts().isEmpty()) {
+                // If it does not have associated parts, show a confirmation dialog
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Confirmation Dialog");
+                alert.setHeaderText(null);
+                alert.setContentText("Please confirm: Do you want to delete?");
 
-            Optional<ButtonType> result = alert.showAndWait();
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK){
+                    // User chose OK, proceed with deletion
+                    Inventory.deleteProduct(selectedProduct);
+                } else {
+                    // User cancelled the operation, do nothing
+                }
+            } else {
+                // If it has associated parts, show an error message
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Deletion Error");
+                alert.setHeaderText(null);
+                alert.setContentText("Cannot delete a product that has associated parts!");
 
-            // If the user clicked OK, delete the product
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                Inventory.deleteProduct(selectedProduct);
-                productTableView.setItems(Inventory.getAllProducts());  // Refresh the TableView
+                alert.showAndWait();
             }
         } else {
             // If no product is selected, show an error message
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("No Selection");
-            alert.setHeaderText("No Product Selected");
-            alert.setContentText("Please select a product to delete.");
+            alert.setHeaderText(null);
+            alert.setContentText("Please select a product to delete!");
+
             alert.showAndWait();
         }
     }
-
-
-
 }

@@ -1,5 +1,8 @@
 package model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,16 +18,19 @@ public class Product {
     private int stock;
     private int min;
     private int max;
-    private List<Part> associatedParts = new ArrayList<>();
+    private ObservableList<Part> associatedParts;
 
-    public Product(int id, String name, double price, int stock, int min, int max) {
+    public Product(int id, String name, double price, int stock, int min, int max, ObservableList<Part> associatedParts) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.stock = stock;
         this.min = min;
         this.max = max;
+        this.associatedParts = FXCollections.observableArrayList(associatedParts);
+
     }
+
 
     // getters and setters
     /**
@@ -111,17 +117,32 @@ public class Product {
         this.max = max;
     }
 
-    // Associated Parts methods
+    /**
+     * Returns a copy of the list of associated parts of this product.
+     *
+     * @return The list of associated parts.
+     */
     public List<Part> getAssociatedParts() {
-        return new ArrayList<>(associatedParts);
+        return this.associatedParts;
     }
 
+    /**
+     * Adds a part to the list of associated parts of this product if it's not already in the list.
+     *
+     * @param part The part to be added.
+     */
     public void addAssociatedPart(Part part) {
         if (part != null && !associatedParts.contains(part)) {
             associatedParts.add(part);
         }
     }
 
+    /**
+     * Removes a part from the list of associated parts of this product.
+     *
+     * @param part The part to be removed.
+     * @return True if the part was successfully removed, false otherwise.
+     */
     public boolean removeAssociatedPart(Part part) {
         if (part != null) {
             return associatedParts.remove(part);

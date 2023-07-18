@@ -11,8 +11,8 @@
             <Font name="System Bold" size="13.0" />
          </font>
       </Label>
-      <RadioButton fx:id="inHouseRadioButton" layoutX="157.0" layoutY="64.0" mnemonicParsing="false" text="In-House" />
-      <RadioButton fx:id="outsourcedRadioButton" layoutX="270.0" layoutY="64.0" mnemonicParsing="false" text="Outsourced" />
+      <RadioButton fx:id="inHouseRadioButton" layoutX="157.0" layoutY="64.0" mnemonicParsing="false" text="In-House" onAction="#handlePartSourceToggle"/>
+      <RadioButton fx:id="outsourcedRadioButton" layoutX="270.0" layoutY="64.0" mnemonicParsing="false" text="Outsourced" onAction="#handlePartSourceToggle" />
       <ListView layoutX="17.0" layoutY="118.0" prefHeight="313.0" prefWidth="503.0" />
       <TextField fx:id="idTextField" layoutX="100.0" layoutY="135.0" promptText="ID" />
       <TextField fx:id="nameTextField" layoutX="100.0" layoutY="180.0" />
