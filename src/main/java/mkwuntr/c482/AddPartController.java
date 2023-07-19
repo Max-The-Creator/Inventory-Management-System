@@ -184,6 +184,12 @@ public class AddPartController {
         int min = Integer.parseInt(minTextField.getText());
         int max = Integer.parseInt(maxTextField.getText());
         int inv = Integer.parseInt(inventoryTextField.getText());
+
+        if (max < min) {
+            displayErrorMessage("Minimum cannot exceed maximum");
+            return false;
+        }
+
         if (inv < min || inv > max) {
             displayErrorMessage("Inventory not within allowed range");
             return false;
